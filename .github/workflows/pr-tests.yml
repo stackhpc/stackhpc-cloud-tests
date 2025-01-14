@@ -4,7 +4,7 @@ on:
 jobs:
   rocky9-ovs-aio-test:
     name: aio (Rocky 9 OVS)
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@main
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@parameterise-aio-tests # todo: change after merge
     with:
       kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
       os_distribution: rocky
@@ -12,10 +12,11 @@ jobs:
       ssh_username: cloud-user
       neutron_plugin: ovs
       OS_CLOUD: openstack
+      openstack_tests_version: ${{ github.ref }}
     secrets: inherit
   ubuntu-jammy-ovn-aio-test:
     name: aio (Ubuntu Jammy OVN)
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@main
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@parameterise-aio-tests # todo: change after merge
     with:
       kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
       os_distribution: ubuntu
@@ -23,5 +24,5 @@ jobs:
       ssh_username: ubuntu
       neutron_plugin: ovn
       OS_CLOUD: openstack
+      openstack_tests_version: ${{ github.ref }}
     secrets: inherit
-    
