@@ -49,7 +49,7 @@ jobs:
       - name: Run pylint
         run: |
           set +e    # disabling exit on non-zero error code so can output warnings without failing
-          pylint stackhpc_openstack_tests/*.py
+          pylint stackhpc_cloud_tests/*.py
           EXIT_CODE=$?
           set -e
           if [[ $(($EXIT_CODE & 3)) > 0 ]]   #bitwise check for pylint exit codes which indicate errors (01 and 10) https://pylint.readthedocs.io/en/latest/user_guide/usage/run.html#exit-codes
