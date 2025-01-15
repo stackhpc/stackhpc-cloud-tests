@@ -5,6 +5,8 @@ jobs:
   build-kayobe-image:
     name: Build Kayobe Image
     uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-build-kayobe-image.yml@parameterise-aio-tests #todo: change after merge
+    with:
+      repository: stackhpc/stackhpc-kayobe-config
 
   rocky9-ovs-aio-test:
     name: aio (Rocky 9 OVS)
@@ -18,6 +20,7 @@ jobs:
       neutron_plugin: ovs
       OS_CLOUD: openstack
       stackhpc_cloud_tests_version: ${{ github.ref }}
+      repository: stackhpc/stackhpc-kayobe-config
     secrets: inherit
 
   ubuntu-jammy-ovn-aio-test:
@@ -32,6 +35,7 @@ jobs:
       neutron_plugin: ovn
       OS_CLOUD: openstack
       stackhpc_cloud_tests_version: ${{ github.ref }}
+      repository: stackhpc/stackhpc-kayobe-config
     secrets: inherit
     
   lint:
