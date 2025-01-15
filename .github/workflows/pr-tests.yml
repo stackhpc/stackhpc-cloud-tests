@@ -4,7 +4,7 @@ on:
 jobs:
   build-kayobe-image:
     name: Build Kayobe Image
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-build-kayobe-image.yml@stackhpc/2024.1
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-build-kayobe-image.yml@parameterise-aio-tests #todo: change after merge
 
   rocky9-ovs-aio-test:
     name: aio (Rocky 9 OVS)
@@ -17,7 +17,7 @@ jobs:
       ssh_username: cloud-user
       neutron_plugin: ovs
       OS_CLOUD: openstack
-      openstack_tests_version: ${{ github.ref }}
+      stackhpc_cloud_tests_version: ${{ github.ref }}
     secrets: inherit
 
   ubuntu-jammy-ovn-aio-test:
@@ -31,7 +31,7 @@ jobs:
       ssh_username: ubuntu
       neutron_plugin: ovn
       OS_CLOUD: openstack
-      openstack_tests_version: ${{ github.ref }}
+      stackhpc_cloud_tests_version: ${{ github.ref }}
     secrets: inherit
     
   lint:
