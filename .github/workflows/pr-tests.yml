@@ -15,6 +15,8 @@ jobs:
       OS_CLOUD: openstack
       stackhpc_cloud_tests_version: ${{ github.ref }}
       repository: stackhpc/stackhpc-kayobe-config
+      called_from_external: true
+      external_ref_override: stackhpc/2024.1
     secrets: inherit
 
   ubuntu-jammy-ovn-aio-test:
@@ -29,6 +31,8 @@ jobs:
       OS_CLOUD: openstack
       stackhpc_cloud_tests_version: ${{ github.ref }}
       repository: stackhpc/stackhpc-kayobe-config
+      called_from_external: true
+      external_ref_override: stackhpc/2024.1
     secrets: inherit
     
   lint:
