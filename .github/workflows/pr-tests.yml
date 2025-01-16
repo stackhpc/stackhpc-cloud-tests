@@ -2,18 +2,12 @@ name: Pull request
 on:
   pull_request:
 jobs:
-  build-kayobe-image:
-    name: Build Kayobe Image
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-build-kayobe-image.yml@parameterise-aio-tests #todo: change after merge
-    with:
-      repository: stackhpc/stackhpc-kayobe-config
 
   rocky9-ovs-aio-test:
     name: aio (Rocky 9 OVS)
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@parameterise-aio-tests # todo: change after merge
-    needs: build-kayobe-image
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
     with:
-      kayobe_image: ${{ needs.build-kayobe-image.outputs.kayobe_image }}
+      kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
       os_distribution: rocky
       os_release: "9"
       ssh_username: cloud-user
@@ -25,10 +19,9 @@ jobs:
 
   ubuntu-jammy-ovn-aio-test:
     name: aio (Ubuntu Jammy OVN)
-    needs: build-kayobe-image
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@parameterise-aio-tests # todo: change after merge
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
     with:
-      kayobe_image: ${{ needs.build-kayobe-image.outputs.kayobe_image }}
+      kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
       os_distribution: ubuntu
       os_release: jammy
       ssh_username: ubuntu
