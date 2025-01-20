@@ -32,7 +32,7 @@ def prom() -> PrometheusConnect:
 
 def test_prometheus_connection(prom):
     """Check that Prometheus is accessible."""
-    assert prom.check_prometheus_connection()
+    assert (1 == 0)
 
 
 def test_prometheus_node_exporter_metrics(prom):
