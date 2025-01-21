@@ -16,7 +16,11 @@ jobs:
       stackhpc_cloud_tests_version: ${{ github.ref }}
       repository: stackhpc/stackhpc-kayobe-config
       github_ref: stackhpc/2024.1
-    secrets: inherit
+    secrets:
+      KAYOBE_VAULT_PASSWORD: ${{ secrets.KAYOBE_VAULT_PASSWORD }}
+      CLOUDS_YAML: ${{ secrets.CLOUDS_YAML }}
+      OS_APPLICATION_CREDENTIAL_ID: ${{ secrets.OS_APPLICATION_CREDENTIAL_ID }}
+      OS_APPLICATION_CREDENTIAL_SECRET: ${{ secrets.OS_APPLICATION_CREDENTIAL_SECRET }}
 
   ubuntu-jammy-ovn-aio-test:
     name: aio (Ubuntu Jammy OVN)
