@@ -2,7 +2,14 @@ name: Pull request
 on:
   pull_request:
 jobs:
-
+  test-secrets:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "check is MY_SECRET exists"
+        env: 
+            super_secret: ${{ secrets.CLOUDS_YAML }}
+        if: ${{ env.super_secret == '' }}
+        run: echo 'secret not defined'
   rocky9-ovs-aio-test:
     name: aio (Rocky 9 OVS)
     uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
@@ -15,8 +22,7 @@ jobs:
       OS_CLOUD: openstack
       stackhpc_cloud_tests_version: ${{ github.ref }}
       repository: stackhpc/stackhpc-kayobe-config
-      called_from_external: true
-      external_ref_override: stackhpc/2024.1
+      github_ref: stackhpc/2024.1
     secrets: inherit
 
   ubuntu-jammy-ovn-aio-test:
@@ -31,8 +37,7 @@ jobs:
       OS_CLOUD: openstack
       stackhpc_cloud_tests_version: ${{ github.ref }}
       repository: stackhpc/stackhpc-kayobe-config
-      called_from_external: true
-      external_ref_override: stackhpc/2024.1
+      github_ref: stackhpc/2024.1
     secrets: inherit
     
   lint:
