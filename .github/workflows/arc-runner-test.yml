@@ -1,0 +1,10 @@
+name: Pull request
+on:
+  push:
+jobs:
+  arc-test:
+    runs-on: arc-skc-aio-runner
+    steps:
+    - name: Hello world
+      run: echo 'Hello world'
+    
