@@ -23,7 +23,6 @@ jobs:
       stackhpc_cloud_tests_version: ${{ github.ref }}
       repository: stackhpc/stackhpc-kayobe-config
       github_ref: stackhpc/2024.1
-      runs-on: arc-cloud-tests-runner
     secrets: inherit
 
   ubuntu-jammy-ovn-aio-test:
@@ -39,7 +38,6 @@ jobs:
       stackhpc_cloud_tests_version: ${{ github.ref }}
       repository: stackhpc/stackhpc-kayobe-config
       github_ref: stackhpc/2024.1
-      runs-on: arc-cloud-tests-runner
     secrets: inherit
     
   lint:
