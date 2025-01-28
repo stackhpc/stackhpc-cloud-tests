@@ -14,6 +14,7 @@ jobs:
     name: aio (Rocky 9 OVS)
     uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
     with:
+      runs-on: arc-aio-cloud-tests-runner
       kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
       os_distribution: rocky
       os_release: "9"
@@ -29,6 +30,7 @@ jobs:
     name: aio (Ubuntu Jammy OVN)
     uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
     with:
+      runs-on: arc-aio-cloud-tests-runner
       kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
       os_distribution: ubuntu
       os_release: jammy
@@ -41,7 +43,7 @@ jobs:
     secrets: inherit
     
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: arc-aio-cloud-tests-runner
     steps:
       - uses: actions/checkout@v4
 
