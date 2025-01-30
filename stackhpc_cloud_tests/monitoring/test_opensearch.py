@@ -20,7 +20,7 @@ import os
 import pytest
 import requests
 
-from stackhpc_openstack_tests import utils
+from stackhpc_cloud_tests import utils
 
 
 @pytest.fixture
