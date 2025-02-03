@@ -86,11 +86,14 @@ def test_ip_forwarding_disabled(docker_info):
     assert not docker_info["IPv4Forwarding"]
 
 
-def test_iptables_disabled(docker_info):
+def test_iptables_disabled(host):
     """Check that IPTables manipulation is disabled."""
-    assert not docker_info["BridgeNfIptables"]
-    assert not docker_info["BridgeNfIp6tables"]
-
+    # (MaxN) "docker system info" for version 27.4.1 will report "true" for "BridgeNfIptables" and "BridgeNfIp6tables"
+    # regardless of the setting of "iptables" in /etc/docker/daemon.json,
+    # however correct creation of iptables rules will follow this setting - so test on the iptables rules instead.
+    iptables_chains = host.check_output("iptables -L")
+    assert "FORWARD" in iptables_chains
+    assert "DOCKER" not in iptables_chains
 
 def test_live_restore_enabled(docker_info):
     """Check that live restore is enabled."""
