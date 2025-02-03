@@ -68,7 +68,11 @@ def test_opensearch_dashboards_status():
     dashboard_username = os.environ["OPENSEARCH_DASHBOARDS_USERNAME"]
     dashboard_password = os.environ["OPENSEARCH_DASHBOARDS_PASSWORD"]
     dashboard_url += "/api/status"
-    result = requests.get(dashboard_url, auth=(dashboard_username, dashboard_password))
+    dashboard_cacert = os.environ.get("OPENSEARCH_DASHBOARDS_CACERT")
+    kwargs = {}
+    if dashboard_cacert:
+        kwargs["verify"] = dashboard_cacert
+    result = requests.get(dashboard_url, auth=(dashboard_username, dashboard_password), **kwargs)
     assert result.ok
     result = result.json()
     assert result["status"]["overall"]["state"] == "green"
