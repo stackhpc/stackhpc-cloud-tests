@@ -13,12 +13,12 @@
 # under the License.
 
 # TODO:
-# * Dashboard login
 # * Cluster health
 
 from opensearchpy import OpenSearch
 import os
 import pytest
+import requests
 
 from stackhpc_cloud_tests import utils
 
@@ -60,3 +60,15 @@ def test_opensearch_has_info_logs(opensearch):
     # https://opensearch-project.github.io/opensearch-py/api-ref/clients/opensearch_client.html#opensearchpy.OpenSearch.search
     result = opensearch.search(body=query, index="flog-*", size=1)
     assert len(result["hits"]["hits"]) == 1
+
+
+def test_opensearch_dashboards_status():
+    """Check that OpenSearch Dashboards is accessible and is in a green state."""
+    dashboard_url = os.environ["OPENSEARCH_DASHBOARDS_URL"]
+    dashboard_username = os.environ["OPENSEARCH_DASHBOARDS_USERNAME"]
+    dashboard_password = os.environ["OPENSEARCH_DASHBOARDS_PASSWORD"]
+    dashboard_url += "/api/status"
+    result = requests.get(dashboard_url, auth=(dashboard_username, dashboard_password))
+    assert result.ok
+    result = result.json()
+    assert result["status"]["overall"]["state"] == "green"

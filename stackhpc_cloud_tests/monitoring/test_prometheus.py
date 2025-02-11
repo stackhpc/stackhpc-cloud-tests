@@ -39,3 +39,21 @@ def test_prometheus_node_exporter_metrics(prom):
     """Check that expected node exporter metrics exist."""
     metrics = prom.all_metrics()
     assert "node_cpu_seconds_total" in metrics
+
+
+def test_prometheus_alerts_inactive(prom):
+    """Check that no Prometheus alerts are active."""
+    # https://prometheus.io/docs/prometheus/latest/querying/api/#alerts
+    response = prom._session.get(
+        "{0}/api/v1/alerts".format(prom.url),
+        verify=prom._session.verify,
+        headers=prom.headers,
+        auth=prom.auth,
+        cert=prom._session.cert,
+    )
+    assert response.ok
+    response = response.json()
+    assert "status" in response
+    assert response["status"] == "success"
+    alerts = response["data"]["alerts"]
+    assert not alerts
