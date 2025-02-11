@@ -20,7 +20,7 @@ from opensearchpy import OpenSearch
 import os
 import pytest
 
-from stackhpc_openstack_tests import utils
+from stackhpc_cloud_tests import utils
 
 
 @pytest.fixture
