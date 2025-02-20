@@ -1,5 +1,6 @@
 grafana-client==4.1.*
 opensearch-py==2.5.*
 prometheus-api-client==0.5.*
+pylint==3.3.*
 pytest-testinfra==10.1.*
 requests==2.31.*
