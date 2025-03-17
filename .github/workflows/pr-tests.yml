@@ -4,7 +4,7 @@ on:
 jobs:
   rocky9-ovs-aio-test:
     name: aio (Rocky 9 OVS)
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@test-sct-branches-before-merging
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
     with:
       kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
       os_distribution: rocky
@@ -21,7 +21,7 @@ jobs:
 
   ubuntu-jammy-ovn-aio-test:
     name: aio (Ubuntu Jammy OVN)
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@test-sct-branches-before-merging
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
     with:
       kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
       os_distribution: ubuntu
