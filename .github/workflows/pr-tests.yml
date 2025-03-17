@@ -2,6 +2,7 @@ name: Pull request
 on:
   pull_request:
 jobs:
+  
   rocky9-ovs-aio-test:
     name: aio (Rocky 9 OVS)
     uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
@@ -13,7 +14,8 @@ jobs:
       neutron_plugin: ovs
       OS_CLOUD: openstack
       #stackhpc_cloud_tests_version: ${{ github.ref }}
-      stackhpc_cloud_tests_version: opensearch-dashboards-grafana
+      stackhpc_cloud_tests_version: ${{ github.head_ref || github.ref_name }}
+      #stackhpc_cloud_tests_version: opensearch-dashboards-grafana
       repository: stackhpc/stackhpc-kayobe-config
       github_ref: stackhpc/2024.1
       runner: arc-aio-cloud-tests-runner
@@ -30,7 +32,8 @@ jobs:
       neutron_plugin: ovn
       OS_CLOUD: openstack
       #stackhpc_cloud_tests_version: ${{ github.ref }}
-      stackhpc_cloud_tests_version: opensearch-dashboards-grafana
+      stackhpc_cloud_tests_version: ${{ github.head_ref || github.ref_name }}
+      #stackhpc_cloud_tests_version: opensearch-dashboards-grafana
       repository: stackhpc/stackhpc-kayobe-config
       github_ref: stackhpc/2024.1
       runner: arc-aio-cloud-tests-runner
