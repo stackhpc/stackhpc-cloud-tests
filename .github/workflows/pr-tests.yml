@@ -1,0 +1,54 @@
+name: Pull request
+on:
+  pull_request:
+jobs:
+  rocky9-ovs-aio-test:
+    name: aio (Rocky 9 OVS)
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
+    with:
+      kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
+      os_distribution: rocky
+      os_release: "9"
+      ssh_username: cloud-user
+      neutron_plugin: ovs
+      OS_CLOUD: openstack
+      stackhpc_cloud_tests_version: ${{ github.head_ref || github.ref_name }}
+      repository: stackhpc/stackhpc-kayobe-config
+      github_ref: stackhpc/2024.1
+      runner: arc-aio-cloud-tests-runner
+    secrets: inherit
+
+  ubuntu-jammy-ovn-aio-test:
+    name: aio (Ubuntu Jammy OVN)
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
+    with:
+      kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
+      os_distribution: ubuntu
+      os_release: jammy
+      ssh_username: ubuntu
+      neutron_plugin: ovn
+      OS_CLOUD: openstack
+      stackhpc_cloud_tests_version: ${{ github.head_ref || github.ref_name }}
+      repository: stackhpc/stackhpc-kayobe-config
+      github_ref: stackhpc/2024.1
+      runner: arc-aio-cloud-tests-runner
+    secrets: inherit
+    
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pip dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pylint
+        run: |
+          set +e    # disabling exit on non-zero error code so can output warnings without failing
+          pylint stackhpc_cloud_tests/*.py
+          EXIT_CODE=$?
+          set -e
+          if [[ $(($EXIT_CODE & 3)) > 0 ]]   #bitwise check for pylint exit codes which indicate errors (01 and 10) https://pylint.readthedocs.io/en/latest/user_guide/usage/run.html#exit-codes
+          then
+            exit 1
+          fi
