@@ -23,10 +23,9 @@ def test_selinux(host):
     if host.system_info.distribution in {"debian", "ubuntu"}:
         pytest.skip(reason="SELinux is not supported on Debian or Ubuntu")
     # Desired state: enforcing, permissive or disabled
-    expected_state = os.environ["SELINUX_STATE"]
-    assert expected_state in {"enforcing", "permissive", "disabled"}
-    expected_status = "disabled" if expected_state == "disabled" else "enabled"
-    expected_mode = expected_state
+    expected_mode = os.environ["SELINUX_STATE"]
+    assert expected_mode in {"enforcing", "permissive", "disabled"}
+    expected_status = "disabled" if expected_mode == "disabled" else "enabled"
     selinux = host.check_output("sestatus")
     selinux = selinux.splitlines()
     # Remove duplicate whitespace characters in output
