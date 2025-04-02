@@ -19,7 +19,7 @@ import pytest
 def test_selinux(host):
     """Check that SELinux is enabled and permissive on supported systems."""
     # Adapted from Kayobe host configure tests:
-    # https://opendev.org/openstack/kayobe/src/branch/master/playbooks/kayobe-overcloud-host-configure-base/tests/test_overcloud_host_configure.py
+    # https://opendev.org/openstack/kayobe/src/commit/5333596afd6b93151e8e5a58257944b892d90060/playbooks/kayobe-overcloud-host-configure-base/tests/test_overcloud_host_configure.py#L350
     if host.system_info.distribution in {"debian", "ubuntu"}:
         pytest.skip(reason="SELinux is not supported on Debian or Ubuntu")
     # Desired state: enforcing, permissive or disabled
