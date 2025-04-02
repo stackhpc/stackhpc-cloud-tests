@@ -55,5 +55,21 @@ def test_prometheus_alerts_inactive(prom):
     response = response.json()
     assert "status" in response
     assert response["status"] == "success"
-    alerts = response["data"]["alerts"]
-    assert not alerts
+    assert "data" in response
+    alerts = response["data"]["alerts"] or []
+    # (MaxN) Allow for, and filter out, alerts we'd expect to see in an AIO environment.
+    #        TODO - find a way of configuring this for SCT runs in other environments.
+    alerts_to_ignore = [
+        # We know our volumes are small.
+        "StorageFillingUp",
+        # This is probably due to storage space..
+        "ElasticsearchClusterYellow",
+        # ..or because we're running in a single instance and it wants to be clustered across multiple nodes.
+        "ElasticsearchUnassignedShards",
+        # It's a small AIO!
+        "LowMemory",
+        # It's only one node and expects three, see https://github.com/stackhpc/stackhpc-kayobe-config/pull/1579
+        "RabbitMQNodeDown"
+    ]
+    alerts = [ alert for alert in alerts if alert["labels"]["alertname"] not in alerts_to_ignore ]
+    assert len(alerts) == 0
