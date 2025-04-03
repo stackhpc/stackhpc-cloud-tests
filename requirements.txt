@@ -5,4 +5,4 @@ prometheus-api-client==0.5.*
 pylint==3.3.*
 pytest-subtests==0.12.*
 pytest-testinfra==10.1.*
-requests==2.31.*
+requests==2.32.*
