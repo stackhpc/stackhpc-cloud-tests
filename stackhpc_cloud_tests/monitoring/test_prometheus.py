@@ -57,19 +57,33 @@ def test_prometheus_alerts_inactive(prom):
     assert response["status"] == "success"
     assert "data" in response
     alerts = response["data"]["alerts"] or []
+
     # (MaxN) Allow for, and filter out, alerts we'd expect to see in an AIO environment.
-    #        TODO - find a way of configuring this for SCT runs in other environments.
-    alerts_to_ignore = [
+    #        TODO - find a way of configuring this for SCT running in other environments.
+    aio_alerts_to_ignore = [
         # We know our volumes are small.
-        "StorageFillingUp",
+        { "alertname": "StorageFillingUp", "instance": "controller0" },
         # This is probably due to storage space..
-        "ElasticsearchClusterYellow",
+        { "alertname": "ElasticsearchClusterYellow", "instance": "controller0" },
         # ..or because we're running in a single instance and it wants to be clustered across multiple nodes.
-        "ElasticsearchUnassignedShards",
+        { "alertname": "ElasticsearchUnassignedShards", "instance": "controller0" },
         # It's a small AIO!
-        "LowMemory",
+        { "alertname": "LowMemory", "instance": "controller0" },
         # It's only one node and expects three, see https://github.com/stackhpc/stackhpc-kayobe-config/pull/1579
-        "RabbitMQNodeDown"
+        { "alertname": "RabbitMQNodeDown" },
+        # This is probably because Tempest runs before pytest so the container has been recently stopped.
+        { "alertname": "ContainerKilled", "name": "tempest" }
     ]
-    alerts = [ alert for alert in alerts if alert["labels"]["alertname"] not in alerts_to_ignore ]
+
+    def alert_is_ignored(alert, alerts_to_ignore):
+        alert_items = alert.items()
+        for alert_to_ignore in alerts_to_ignore:
+            alert_to_ignore_items = alert_to_ignore.items()
+            # alert has more items than alerts_to_ignore
+            # so here we can return True if alert_to_ignore is a subset of alerts
+            if alert_to_ignore_items <= alert_items:
+                return True
+        return False
+
+    alerts = [ alert for alert in alerts if not alert_is_ignored(alert["labels"], aio_alerts_to_ignore) ]
     assert len(alerts) == 0
