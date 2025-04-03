@@ -76,14 +76,8 @@ def test_prometheus_alerts_inactive(prom):
     ]
 
     def alert_is_ignored(alert, alerts_to_ignore):
-        alert_items = alert.items()
-        for alert_to_ignore in alerts_to_ignore:
-            alert_to_ignore_items = alert_to_ignore.items()
-            # alert has more items than alerts_to_ignore
-            # so here we can return True if alert_to_ignore is a subset of alerts
-            if alert_to_ignore_items <= alert_items:
-                return True
-        return False
+        # Check if any of the "ignore cases" match the alert
+        return any(alert_to_ignore.items() <= alert.items() for alert_to_ignore in alerts_to_ignore)
 
     alerts = [ alert for alert in alerts if not alert_is_ignored(alert["labels"], aio_alerts_to_ignore) ]
     assert len(alerts) == 0
