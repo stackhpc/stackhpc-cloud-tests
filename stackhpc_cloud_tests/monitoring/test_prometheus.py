@@ -72,7 +72,9 @@ def test_prometheus_alerts_inactive(prom):
         # It's only one node and expects three, see https://github.com/stackhpc/stackhpc-kayobe-config/pull/1579
         { "alertname": "RabbitMQNodeDown" },
         # This is probably because Tempest runs before pytest so the container has been recently stopped.
-        { "alertname": "ContainerKilled", "name": "tempest" }
+        { "alertname": "ContainerKilled", "name": "tempest" },
+        # This alert sometimes triggers after periods of high activity e.g. a major upgrade
+        { "alertname": "RabbitMQTooMuchReady" },
     ]
 
     def alert_is_ignored(alert, alerts_to_ignore):
