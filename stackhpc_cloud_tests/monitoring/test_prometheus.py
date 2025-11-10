@@ -63,6 +63,7 @@ def test_prometheus_alerts_inactive(prom):
     aio_alerts_to_ignore = [
         # We know our volumes are small.
         { "alertname": "StorageFillingUp", "instance": "controller0" },
+        { "alertname": "ElasticsearchDiskSpaceLow", "instance": "controller0" },
         # This is probably due to storage space..
         { "alertname": "ElasticsearchClusterYellow", "instance": "controller0" },
         # ..or because we're running in a single instance and it wants to be clustered across multiple nodes.
