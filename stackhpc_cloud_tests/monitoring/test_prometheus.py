@@ -62,14 +62,14 @@ def test_prometheus_alerts_inactive(prom):
     #        TODO - find a way of configuring this for SCT running in other environments.
     aio_alerts_to_ignore = [
         # We know our volumes are small.
-        { "alertname": "StorageFillingUp", "instance": "controller0" },
-        { "alertname": "ElasticsearchDiskSpaceLow", "instance": "controller0" },
+        { "alertname": "StorageFillingUp" },
+        { "alertname": "ElasticsearchDiskSpaceLow" },
         # This is probably due to storage space..
-        { "alertname": "ElasticsearchClusterYellow", "instance": "controller0" },
+        { "alertname": "ElasticsearchClusterYellow" },
         # ..or because we're running in a single instance and it wants to be clustered across multiple nodes.
-        { "alertname": "ElasticsearchUnassignedShards", "instance": "controller0" },
+        { "alertname": "ElasticsearchUnassignedShards" },
         # It's a small AIO!
-        { "alertname": "LowMemory", "instance": "controller0" },
+        { "alertname": "LowMemory" },
         # It's only one node and expects three, see https://github.com/stackhpc/stackhpc-kayobe-config/pull/1579
         { "alertname": "RabbitMQNodeDown" },
         # This is probably because Tempest runs before pytest so the container has been recently stopped.
