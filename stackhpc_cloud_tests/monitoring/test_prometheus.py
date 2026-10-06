@@ -16,6 +16,11 @@ import os
 from prometheus_api_client import PrometheusConnect
 import pytest
 
+skip = False
+if os.environ.get("SKIP_SCT") is not None:
+    skip_sct = os.environ.get("SKIP_SCT")
+    if "prometheus" in skip_sct:
+        skip = True
 
 @pytest.fixture
 def prom() -> PrometheusConnect:
@@ -29,18 +34,18 @@ def prom() -> PrometheusConnect:
         kwargs["auth"] = (prometheus_username, prometheus_password)
     return PrometheusConnect(url=prometheus_url, disable_ssl=True, **kwargs)
 
-
+@pytest.mark.skipif(skip, reason="Prometheus tests skipped.")
 def test_prometheus_connection(prom):
     """Check that Prometheus is accessible."""
     assert prom.check_prometheus_connection()
 
-
+@pytest.mark.skipif(skip, reason="Prometheus tests skipped.")
 def test_prometheus_node_exporter_metrics(prom):
     """Check that expected node exporter metrics exist."""
     metrics = prom.all_metrics()
     assert "node_cpu_seconds_total" in metrics
 
-
+@pytest.mark.skipif(skip, reason="Prometheus tests skipped.")
 def test_prometheus_alerts_inactive(prom):
     """Check that no Prometheus alerts are active."""
     # https://prometheus.io/docs/prometheus/latest/querying/api/#alerts

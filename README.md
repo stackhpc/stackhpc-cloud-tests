@@ -38,3 +38,27 @@ Or run tests from a specific submodule.
 ```sh
 py.test --pyargs stackhpc_cloud_tests.test_prometheus
 ```
+
+To skip specific tests, set the SKIP_SCT variable:
+| Test to skip  | SKIP_SCT value |
+|---------------|----------------|
+|test_docker.py | docker         |
+|test_ntp.py    | ntp            |
+|test_selinux.py| selinux        |
+|test_tls.py    | tls            |
+|test_grafana.py| grafana        |
+|test_opensearch.py| opensearch  |
+|test_prometheus.py| prometheus  |
+
+To skip more than one test, set SKIP_SCT to a comma separated list:
+```sh
+# Skip both test_docker.py and test_ntp.py
+export SKIP_SCT=docker,ntp
+```
+
+Within the TLS tests it is possible to skip checks on individual frontends/backends:
+```sh
+# Use the name that haproxy uses for each frontend/backend you want to skip
+export SKIP_FRONTEND=<frontend1>,<frontend2>
+export SKIP_BACKEND=<backend1>
+```

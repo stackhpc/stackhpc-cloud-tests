@@ -18,6 +18,11 @@ from grafana_client import GrafanaApi
 import os
 import pytest
 
+skip = False
+if os.environ.get("SKIP_SCT") is not None:
+    skip_sct = os.environ.get("SKIP_SCT")
+    if "grafana" in skip_sct:
+        skip = True
 
 @pytest.fixture
 def grafana() -> GrafanaApi:
@@ -31,7 +36,7 @@ def grafana() -> GrafanaApi:
         credential=(grafana_username, grafana_password),
     )
 
-
+@pytest.mark.skipif(skip, reason="Grafana tests skipped.")
 def test_grafana_api_stats(grafana):
     """Test that Grafana API stats are accessible."""
     # https://grafana.com/docs/grafana/latest/developers/http_api/admin/#grafana-stats

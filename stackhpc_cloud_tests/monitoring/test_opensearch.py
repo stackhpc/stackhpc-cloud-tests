@@ -22,6 +22,11 @@ import requests
 
 from stackhpc_cloud_tests import utils
 
+skip = False
+if os.environ.get("SKIP_SCT") is not None:
+    skip_sct = os.environ.get("SKIP_SCT")
+    if "grafana" in skip_sct:
+        skip = True
 
 @pytest.fixture
 def opensearch() -> OpenSearch:
@@ -47,7 +52,7 @@ def opensearch() -> OpenSearch:
         ssl_show_warn=False,
     )
 
-
+@pytest.mark.skipif(skip, reason="OpenSearch tests skipped.")
 def test_opensearch_has_info_logs(opensearch):
     """Check that OpenSearch has some INFO level logs."""
     query = {
@@ -61,7 +66,7 @@ def test_opensearch_has_info_logs(opensearch):
     result = opensearch.search(body=query, index="flog-*", size=1)
     assert len(result["hits"]["hits"]) == 1
 
-
+@pytest.mark.skipif(skip, reason="OpenSearch tests skipped.")
 def test_opensearch_dashboards_status():
     """Check that OpenSearch Dashboards is accessible and is in a green state."""
     dashboard_url = os.environ["OPENSEARCH_DASHBOARDS_URL"]

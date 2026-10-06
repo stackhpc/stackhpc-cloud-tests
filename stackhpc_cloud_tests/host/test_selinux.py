@@ -15,7 +15,13 @@
 import os
 import pytest
 
+skip = False
+if os.environ.get("SKIP_SCT") is not None:
+    skip_sct = os.environ.get("SKIP_SCT")
+    if "selinux" in skip_sct:
+        skip = True
 
+@pytest.mark.skipif(skip, reason="SELinux tests skipped.")
 def test_selinux(host):
     """Check that SELinux is enabled and permissive on supported systems."""
     # Adapted from Kayobe host configure tests:
