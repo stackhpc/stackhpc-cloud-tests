@@ -17,6 +17,11 @@ import os
 from packaging.version import parse
 import pytest
 
+skip = False
+if os.environ.get("SKIP_SCT") is not None:
+    skip_sct = os.environ.get("SKIP_SCT")
+    if "docker" in skip_sct:
+        skip = True
 
 @pytest.fixture
 def docker_info(host, scope="session"):
@@ -25,7 +30,7 @@ def docker_info(host, scope="session"):
         docker_info = host.check_output("docker info --format json")
     return json.loads(docker_info)
 
-
+@pytest.mark.skipif(skip, reason="Docker tests skipped.")
 def test_docker_version(host):
     """Check that Docker is accessible and optionally check version."""
     # An optional inclusive minimum version.
@@ -44,7 +49,7 @@ def test_docker_version(host):
         assert client_version < max_version
         assert server_version < max_version
 
-
+@pytest.mark.skipif(skip, reason="Docker tests skipped.")
 def test_docker_containers(subtests, host):
     """Check that Docker containers are healthy."""
     with host.sudo("stack"):
@@ -65,12 +70,12 @@ def test_docker_containers(subtests, host):
                 assert "max-file" in state["HostConfig"]["LogConfig"]["Config"]
                 assert "max-size" in state["HostConfig"]["LogConfig"]["Config"]
 
-
+@pytest.mark.skipif(skip, reason="Docker tests skipped.")
 def test_docker_driver(docker_info):
     """Check that Docker is using the overlay2 storage driver."""
     assert docker_info["Driver"] == "overlay2"
 
-
+@pytest.mark.skipif(skip, reason="Docker tests skipped.")
 def test_no_bridge_network_exists(host):
     """Check that no bridge network exists."""
     with host.sudo("stack"):
@@ -80,12 +85,12 @@ def test_no_bridge_network_exists(host):
         assert network["Name"] != "bridge"
         assert network["Driver"] != "bridge"
 
-
+@pytest.mark.skipif(skip, reason="Docker tests skipped.")
 def test_ip_forwarding_disabled(docker_info):
     """Check that IP forwarding is disabled."""
     assert not docker_info["IPv4Forwarding"]
 
-
+@pytest.mark.skipif(skip, reason="Docker tests skipped.")
 def test_iptables_disabled(host):
     """Check that IPTables manipulation is disabled."""
     # (MaxN) "docker system info" for version 27.4.1 will report "true" for "BridgeNfIptables" and "BridgeNfIp6tables"
@@ -95,6 +100,7 @@ def test_iptables_disabled(host):
     assert "FORWARD" in iptables_chains
     assert "DOCKER" not in iptables_chains
 
+@pytest.mark.skipif(skip, reason="Docker tests skipped.")
 def test_live_restore_enabled(docker_info):
     """Check that live restore is enabled."""
     assert docker_info["LiveRestoreEnabled"]

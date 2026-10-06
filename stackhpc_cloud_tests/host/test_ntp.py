@@ -19,7 +19,13 @@ import pytest
 
 MAX_OFFSET_SECONDS = 0.5  # 500 ms limit
 
+skip = False
+if os.environ.get("SKIP_SCT") is not None:
+    skip_sct = os.environ.get("SKIP_SCT")
+    if "ntp" in skip_sct:
+        skip = True
 
+@pytest.mark.skipif(skip, reason="NTP tests skipped.")
 def _get_parsed_ntp_sources():
     # fetch and parse NTP_SOURCES
     raw_ntp_sources = os.environ.get("NTP_SOURCES")
@@ -27,7 +33,7 @@ def _get_parsed_ntp_sources():
         return []
     return [s.strip() for s in raw_ntp_sources.split(",") if s.strip()]
 
-
+@pytest.mark.skipif(skip, reason="NTP tests skipped.")
 def test_ntp_sources_env_var():
     """Verify NTP_SOURCES is set."""
     raw_ntp_sources = os.environ.get("NTP_SOURCES")
@@ -38,7 +44,7 @@ def test_ntp_sources_env_var():
     ntp_sources = _get_parsed_ntp_sources()
     assert ntp_sources, "NTP_SOURCES contains no valid source entries."
 
-
+@pytest.mark.skipif(skip, reason="NTP tests skipped.")
 def test_chrony_service_and_sync_status(host):
     """Check that chrony is running and syncing properly"""
     # Check timedatectl
@@ -56,7 +62,7 @@ def test_chrony_service_and_sync_status(host):
         f"Output:\n{sources_stdout}"
     )
 
-
+@pytest.mark.skipif(skip, reason="NTP tests skipped.")
 def test_active_source_matches_expected(host):
     """Check that one of the NTP_SOURCES values is actively used by chrony (*=current source)"""
     ntp_sources = _get_parsed_ntp_sources()
@@ -77,7 +83,7 @@ def test_active_source_matches_expected(host):
         f"Chronyc Sources Output:\n{sources_stdout}"
     )
 
-
+@pytest.mark.skipif(skip, reason="NTP tests skipped.")
 def test_ntp_time_offset(host):
     """Check time offset"""
     chrony_stdout = host.check_output("chronyc tracking")
