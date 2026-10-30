@@ -2,38 +2,38 @@ name: Pull request
 on:
   pull_request:
 jobs:
-  rocky9-ovs-aio-test:
-    name: aio (Rocky 9 OVS)
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
+  rocky10-ovs-aio-test:
+    name: aio (Rocky 10 OVS)
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2026.1
     with:
-      kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
+      kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2026.1
       os_distribution: rocky
-      os_release: "9"
+      os_release: "10"
       ssh_username: cloud-user
       neutron_plugin: ovs
       OS_CLOUD: openstack
       stackhpc_cloud_tests_version: ${{ github.head_ref || github.ref_name }}
       repository: stackhpc/stackhpc-kayobe-config
-      github_ref: stackhpc/2024.1
+      github_ref: stackhpc/2026.1
     secrets: inherit
 
-  ubuntu-jammy-ovn-aio-test:
-    name: aio (Ubuntu Jammy OVN)
-    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2024.1
+  ubuntu-noble-ovn-aio-test:
+    name: aio (Ubuntu Noble OVN)
+    uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2026.1
     with:
-      kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2024.1
+      kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2026.1
       os_distribution: ubuntu
-      os_release: jammy
+      os_release: noble
       ssh_username: ubuntu
       neutron_plugin: ovn
       OS_CLOUD: openstack
       stackhpc_cloud_tests_version: ${{ github.head_ref || github.ref_name }}
       repository: stackhpc/stackhpc-kayobe-config
-      github_ref: stackhpc/2024.1
+      github_ref: stackhpc/2026.1
     secrets: inherit
     
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
