@@ -4,6 +4,8 @@ on:
 jobs:
   rocky10-ovs-aio-test:
     name: aio (Rocky 10 OVS)
+    permissions:
+      checks: write
     uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2026.1
     with:
       kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2026.1
@@ -19,6 +21,8 @@ jobs:
 
   ubuntu-noble-ovn-aio-test:
     name: aio (Ubuntu Noble OVN)
+    permissions:
+      checks: write
     uses: stackhpc/stackhpc-kayobe-config/.github/workflows/stackhpc-all-in-one.yml@stackhpc/2026.1
     with:
       kayobe_image: ghcr.io/stackhpc/stackhpc-kayobe-config:stackhpc-2026.1
