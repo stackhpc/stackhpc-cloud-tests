@@ -107,6 +107,8 @@ def test_rgw_hosts_labelled(host):
 def test_rgw_daemons_on_labelled_hosts(host):
     """Check that every host labelled for an RGW is actually running one."""
     labelled_hosts = _hosts_labelled_rgw(host)
+    assert labelled_hosts != [], "No host carries the rgw label"
+
     daemons = utils.run_ceph_json(host, "orch ps")
 
     hosts_running_rgw = []

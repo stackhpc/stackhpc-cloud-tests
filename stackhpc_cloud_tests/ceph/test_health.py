@@ -106,8 +106,11 @@ def test_osds_up_and_in(host):
 def test_pgs_active_clean(subtests, host):
     """Check that every placement group is active and clean."""
     status = utils.run_ceph_json(host, "-s")
+    pg_states = status["pgmap"]["pgs_by_state"]
 
-    for pg_state in status["pgmap"]["pgs_by_state"]:
+    assert pg_states != [], "Ceph reports no placement groups"
+
+    for pg_state in pg_states:
         state_name = pg_state["state_name"]
         with subtests.test(msg="state=" + state_name):
             # State names are joined with "+", such as "active+clean" or

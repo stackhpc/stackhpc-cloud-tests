@@ -50,8 +50,8 @@ def _capabilities_by_entity(host):
 def test_expected_pools_present(subtests, host):
     """Check each pool the deployment asks for exists with its application."""
     expected_pools = utils.json_from_env("CEPH_EXPECTED_POOLS")
-    if expected_pools is None:
-        pytest.skip("CEPH_EXPECTED_POOLS is not set")
+    if not expected_pools:
+        pytest.skip("CEPH_EXPECTED_POOLS is empty or not set")
 
     applications_by_pool = _applications_by_pool(host)
 
@@ -79,8 +79,9 @@ def test_expected_pools_present(subtests, host):
 def test_absent_pools_removed(subtests, host):
     """Check that pools the deployment asks to remove are not present."""
     expected_pools = utils.json_from_env("CEPH_EXPECTED_POOLS")
-    if expected_pools is None:
-        pytest.skip("CEPH_EXPECTED_POOLS is not set")
+    # An empty list would make the loop below pass without checking anything.
+    if not expected_pools:
+        pytest.skip("CEPH_EXPECTED_POOLS is empty or not set")
 
     applications_by_pool = _applications_by_pool(host)
 
@@ -99,8 +100,8 @@ def test_expected_keys_present(subtests, host):
     capabilities.
     """
     expected_keys = utils.json_from_env("CEPH_EXPECTED_KEYS")
-    if expected_keys is None:
-        pytest.skip("CEPH_EXPECTED_KEYS is not set")
+    if not expected_keys:
+        pytest.skip("CEPH_EXPECTED_KEYS is empty or not set")
 
     capabilities_by_entity = _capabilities_by_entity(host)
 
@@ -128,8 +129,8 @@ def test_expected_keys_present(subtests, host):
 def test_absent_keys_removed(subtests, host):
     """Check that cephx keys the deployment asks to remove are not present."""
     expected_keys = utils.json_from_env("CEPH_EXPECTED_KEYS")
-    if expected_keys is None:
-        pytest.skip("CEPH_EXPECTED_KEYS is not set")
+    if not expected_keys:
+        pytest.skip("CEPH_EXPECTED_KEYS is empty or not set")
 
     capabilities_by_entity = _capabilities_by_entity(host)
 
