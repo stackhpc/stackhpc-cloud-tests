@@ -12,6 +12,13 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+"""Checks that the Ceph admin tooling works on this host.
+
+cephadm labels the monitor hosts "_admin", which is what places
+/etc/ceph/ceph.conf and the admin keyring on them. Without both of those
+no Ceph command can run from the host at all.
+"""
+
 import pytest
 
 from stackhpc_cloud_tests.ceph import utils

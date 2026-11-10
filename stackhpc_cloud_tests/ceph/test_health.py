@@ -12,6 +12,11 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+"""Checks that the cluster is healthy and fully converged.
+
+Each check covers a different failure
+"""
+
 import pytest
 
 from stackhpc_cloud_tests.ceph import utils
