@@ -48,9 +48,17 @@ To skip specific tests, set the SKIP_SCT variable:
 |test_grafana.py| grafana        |
 |test_opensearch.py| opensearch  |
 |test_prometheus.py| prometheus  |
+|ceph/test_cephadm.py| cephadm   |
+|ceph/test_health.py| ceph-health|
+|ceph/test_config.py| ceph-config|
+|ceph/test_rgw.py| ceph-rgw      |
+|ceph/test_mgr_exporter.py| ceph-exporter|
 
 To skip more than one test, set SKIP_SCT to a comma separated list:
 ```sh
 # Skip both test_docker.py and test_ntp.py
 export SKIP_SCT=docker,ntp
 ```
+
+Values are matched as substrings, so no value may contain another. For example
+a value of `ceph-prometheus` would also skip `test_prometheus.py`.

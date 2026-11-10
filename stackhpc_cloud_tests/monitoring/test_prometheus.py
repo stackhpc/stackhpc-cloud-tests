@@ -16,11 +16,24 @@ import os
 from prometheus_api_client import PrometheusConnect
 import pytest
 
+from stackhpc_cloud_tests import utils
+
 skip = False
 if os.environ.get("SKIP_SCT") is not None:
     skip_sct = os.environ.get("SKIP_SCT")
     if "prometheus" in skip_sct:
         skip = True
+
+# The Ceph metrics that the alert rules in
+# etc/kayobe/kolla/config/prometheus/ceph.rules depend on. If the exporter
+# stops producing them, we would ideally like to catch that in CI
+CEPH_MGR_EXPORTER_METRICS = [
+    "ceph_health_status",
+    "ceph_mon_quorum_status",
+    "ceph_osd_up",
+    "ceph_pg_total",
+    "ceph_pool_metadata",
+]
 
 @pytest.fixture
 def prom() -> PrometheusConnect:
@@ -44,6 +57,39 @@ def test_prometheus_node_exporter_metrics(prom):
     """Check that expected node exporter metrics exist."""
     metrics = prom.all_metrics()
     assert "node_cpu_seconds_total" in metrics
+
+@pytest.mark.skipif(skip, reason="Prometheus tests skipped.")
+def test_prometheus_ceph_mgr_exporter_metrics(prom):
+    """Check that Prometheus has scraped the Ceph manager exporter."""
+    if not utils.str_to_bool(os.environ.get("CEPH_MGR_EXPORTER_ENABLED", "false")):
+        pytest.skip("The Ceph mgr exporter is not enabled")
+
+    metrics = prom.all_metrics()
+
+    for metric in CEPH_MGR_EXPORTER_METRICS:
+        message = f"Prometheus has no {metric} metric from the Ceph mgr exporter"
+        assert metric in metrics, message
+
+@pytest.mark.skipif(skip, reason="Prometheus tests skipped.")
+def test_prometheus_ceph_rgw_probes_succeed(prom):
+    """Check that the blackbox probes against the RGW endpoints succeed."""
+    if not utils.str_to_bool(os.environ.get("CEPH_RGW_ENABLED", "false")):
+        pytest.skip("Ceph RGW is not enabled")
+
+    # Kayobe labels each blackbox target with a service name taken from the
+    # target string, giving service="ceph_rgw" for the public endpoint and
+    # service="ceph_rgw_internal" for the internal one.
+    probes = prom.custom_query('probe_success{service=~"ceph_rgw.*"}')
+
+    assert probes, "Prometheus has no blackbox probes for the RGW endpoints"
+
+    for probe in probes:
+        service = probe["metric"]["service"]
+        instance = probe["metric"]["instance"]
+        succeeded = float(probe["value"][1])
+
+        message = f"Blackbox probe {service} against {instance} is failing"
+        assert succeeded == 1, message
 
 @pytest.mark.skipif(skip, reason="Prometheus tests skipped.")
 def test_prometheus_alerts_inactive(prom):
